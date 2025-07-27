@@ -1,0 +1,33 @@
+2025-07-27 14:10:54,152 - main_system - INFO - RF Learning System initialized
+2025-07-27 14:12:01,005 - __main__ - INFO - RF Learning System initialized
+2025-07-27 14:12:01,005 - __main__ - INFO - Starting RF Learning System (Simulate: True)
+2025-07-27 14:12:14,363 - q_learning_agent - INFO - Episode 100: Total Reward=78.00, Collision Rate=0.000, Epsilon=0.606
+2025-07-27 14:12:14,364 - random_agent - INFO - Random Agent Episode 100: Total Reward=74.00, Collision Rate=0.000
+2025-07-27 14:12:14,829 - __main__ - INFO - Reached maximum episodes: 100
+2025-07-27 14:12:14,831 - q_learning_agent - INFO - Q-table saved to q_table.pkl
+2025-07-27 14:12:14,832 - __main__ - INFO - Creating final visualizations...
+2025-07-27 14:12:14,910 - root - ERROR - Error running system: shape mismatch: objects cannot be broadcast to a single shape.  Mismatch is between arg 0 with shape (3,) and arg 1 with shape (5,).
+2025-07-27 14:12:14,911 - q_learning_agent - INFO - Q-table saved to q_table.pkl
+2025-07-27 14:12:14,911 - __main__ - INFO - Creating final visualizations...
+2025-07-27 14:12:52,762 - __main__ - INFO - RF Learning System initialized
+2025-07-27 14:12:52,763 - __main__ - INFO - Starting RF Learning System (Simulate: True)
+2025-07-27 14:12:59,919 - __main__ - INFO - Reached maximum episodes: 50
+2025-07-27 14:12:59,920 - q_learning_agent - INFO - Q-table saved to q_table.pkl
+2025-07-27 14:12:59,921 - __main__ - INFO - Creating final visualizations...
+2025-07-27 14:13:00,777 - visualization - INFO - Final results saved to final_results.png
+2025-07-27 14:13:01,242 - visualization - INFO - Channel heatmap saved to channel_heatmap.png
+2025-07-27 14:13:01,903 - __main__ - INFO - RF Learning System stopped
+2025-07-27 14:20:53,944 - ns3_integration - INFO - Created NS3 script: rf_learning_simulation.cc
+2025-07-27 14:20:53,946 - ns3_integration - WARNING - NS3 compilation failed: [WinError 2] The system cannot find the file specified
+2025-07-27 14:20:53,946 - ns3_integration - INFO - Using fallback simulation mode
+2025-07-27 14:20:53,946 - ns3_integration - INFO - Running fallback simulation
+2025-07-27 14:20:53,949 - ns3_integration - INFO - Fallback simulation completed. Data saved to ns3_spectrum_data.json
+2025-07-27 14:20:53,949 - __main__ - INFO - NS3 spectrum provider initialized
+2025-07-27 14:20:53,949 - __main__ - INFO - RF Learning System initialized
+2025-07-27 14:20:53,949 - __main__ - INFO - Starting RF Learning System (Simulate: False)
+2025-07-27 14:21:01,226 - __main__ - INFO - Reached maximum episodes: 50
+2025-07-27 14:21:01,227 - q_learning_agent - INFO - Q-table saved to q_table.pkl
+2025-07-27 14:21:01,227 - __main__ - INFO - Creating final visualizations...
+2025-07-27 14:21:02,083 - visualization - INFO - Final results saved to final_results.png
+2025-07-27 14:21:02,555 - visualization - INFO - Channel heatmap saved to channel_heatmap.png
+2025-07-27 14:21:03,197 - __main__ - INFO - RF Learning System stopped
