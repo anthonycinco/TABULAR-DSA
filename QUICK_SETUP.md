@@ -1,6 +1,6 @@
 # RF Learning System - Quick Setup Guide
 
-## 🚀 One-Minute Setup (Ubuntu 20.04+)
+## One-Minute Setup (Ubuntu 20.04+)
 
 ### Prerequisites Check
 ```bash
@@ -27,7 +27,7 @@ uhd_usrp_probe
 gnuradio-companion --version
 ```
 
-## 🎯 Quick Start Commands
+## Quick Start Commands
 
 ### Test the System
 ```bash
@@ -59,7 +59,7 @@ gnuradio-companion rf_sensing.grc
 python3 main_system.py
 ```
 
-## ⚙️ Essential Configuration
+## Essential Configuration
 
 ### Edit `config.py` for Your Environment
 ```python
@@ -76,7 +76,7 @@ LEARNING_RATE = 0.1                # 0.01 to 0.3
 EPSILON_DECAY = 0.995              # 0.99 to 0.999
 ```
 
-## 🔧 Common Commands
+## Common Commands
 
 ### System Control
 ```bash
@@ -111,7 +111,7 @@ gnuradio-companion --version
 pip3 list | grep -E "(numpy|matplotlib|pandas|scipy|seaborn)"
 ```
 
-## 📊 Expected Performance
+## Expected Performance
 
 ### Learning Progress
 - **Episodes 1-50**: Random exploration (epsilon ≈ 1.0)
@@ -123,7 +123,7 @@ pip3 list | grep -E "(numpy|matplotlib|pandas|scipy|seaborn)"
 - Collision rate should decrease over time
 - Success rate should increase to 70-90%
 
-## 🎨 Output Files
+## Output Files
 
 After running, you'll get:
 - `final_results.png` - Performance comparison plots
@@ -131,7 +131,7 @@ After running, you'll get:
 - `q_table.pkl` - Learned Q-table
 - `system_log.txt` - Detailed logs
 
-## 🆘 Quick Fixes
+## Quick Fixes
 
 ### USRP Not Detected
 ```bash
@@ -152,7 +152,7 @@ pip3 install --upgrade pip
 pip3 install -r requirements.txt
 ```
 
-## 📞 Support
+## Support
 
 - Check `system_log.txt` for detailed error messages
 - Run `python3 test_system.py` to verify installation
@@ -160,4 +160,4 @@ pip3 install -r requirements.txt
 
 ---
 
-**Ready to start learning!** 🚀 
+**Ready to start learning!** 

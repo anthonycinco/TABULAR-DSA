@@ -31,3 +31,25 @@
 2025-07-27 14:21:02,083 - visualization - INFO - Final results saved to final_results.png
 2025-07-27 14:21:02,555 - visualization - INFO - Channel heatmap saved to channel_heatmap.png
 2025-07-27 14:21:03,197 - __main__ - INFO - RF Learning System stopped
+2025-07-27 23:15:46,665 - main_system - INFO - RF Learning System initialized
+2025-07-27 23:15:54,045 - __main__ - INFO - RF Learning System initialized
+2025-07-27 23:15:54,045 - __main__ - INFO - Starting RF Learning System (Simulate: True)
+2025-07-27 23:16:01,314 - __main__ - INFO - Reached maximum episodes: 50
+2025-07-27 23:16:01,315 - q_learning_agent - INFO - Q-table saved to q_table.pkl
+2025-07-27 23:16:01,315 - __main__ - INFO - Creating final visualizations...
+2025-07-27 23:16:02,213 - visualization - INFO - Final results saved to final_results.png
+2025-07-27 23:16:02,700 - visualization - INFO - Channel heatmap saved to channel_heatmap.png
+2025-07-27 23:16:03,361 - __main__ - INFO - RF Learning System stopped
+2025-07-27 23:17:27,487 - __main__ - INFO - RF Learning System initialized
+2025-07-27 23:17:27,487 - __main__ - INFO - Starting RF Learning System (Simulate: True)
+2025-07-27 23:17:41,257 - q_learning_agent - INFO - Episode 100: Total Reward=85.00, Collision Rate=0.000, Epsilon=0.606
+2025-07-27 23:17:41,257 - random_agent - INFO - Random Agent Episode 100: Total Reward=74.00, Collision Rate=0.000
+2025-07-27 23:17:55,299 - q_learning_agent - INFO - Episode 200: Total Reward=170.00, Collision Rate=0.000, Epsilon=0.367
+2025-07-27 23:17:55,300 - random_agent - INFO - Random Agent Episode 200: Total Reward=151.00, Collision Rate=0.000
+2025-07-27 23:17:55,866 - __main__ - INFO - Reached maximum episodes: 200
+2025-07-27 23:17:55,867 - q_learning_agent - INFO - Q-table saved to q_table.pkl
+2025-07-27 23:17:55,868 - __main__ - INFO - Creating final visualizations...
+2025-07-27 23:17:56,875 - visualization - INFO - Final results saved to final_results.png
+2025-07-27 23:17:57,385 - visualization - INFO - Channel heatmap saved to channel_heatmap.png
+2025-07-27 23:17:58,090 - __main__ - INFO - RF Learning System stopped
+2025-07-28 00:18:03,236 - main_system - INFO - RF Learning System initialized

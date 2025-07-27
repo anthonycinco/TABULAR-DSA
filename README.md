@@ -37,24 +37,27 @@ This system performs real-time spectrum scanning at 2.4 GHz using a USRP1 SDR, p
 
 ## Installation
 
-### Step 1: System Setup
+For detailed installation instructions, see [INSTALLATION_GUIDE.md](INSTALLATION_GUIDE.md).
+
+### Quick Installation
 
 #### Ubuntu 20.04+ (Recommended)
 ```bash
-# Update system
+# Update system packages
 sudo apt update && sudo apt upgrade -y
 
-# Install essential packages
-sudo apt install -y build-essential cmake git wget curl
+# Install essential build tools and dependencies
+sudo apt install -y build-essential cmake git wget curl pkg-config
 
-# Install Python and pip
-sudo apt install -y python3 python3-pip python3-dev
+# Install Python and development tools
+sudo apt install -y python3 python3-pip python3-dev python3-venv
 
-# Install Qt dependencies (for GNU Radio)
+# Install Qt dependencies (required for GNU Radio)
 sudo apt install -y qt5-default qtcreator python3-pyqt5
 
-# Install additional dependencies
+# Install additional system dependencies
 sudo apt install -y libboost-all-dev libcppunit-dev swig doxygen liblog4cpp5-dev
+sudo apt install -y libusb-1.0-0-dev libudev-dev libfftw3-dev
 ```
 
 #### Windows 10+ with WSL2
@@ -62,32 +65,63 @@ sudo apt install -y libboost-all-dev libcppunit-dev swig doxygen liblog4cpp5-dev
 # Install WSL2 Ubuntu (if not already installed)
 wsl --install -d Ubuntu
 
-# Follow Ubuntu installation steps above
+# Follow Ubuntu installation steps above within WSL2
+```
+
+#### macOS (Alternative)
+```bash
+# Install Homebrew (if not already installed)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Install dependencies
+brew install cmake git python3 qt5 boost fftw
+
+# Install Python packages
+pip3 install --upgrade pip
 ```
 
 ### Step 2: Install GNU Radio and UHD
 
+#### Ubuntu/Debian
 ```bash
-# Add GNU Radio PPA
+# Add GNU Radio PPA for latest stable version
 sudo add-apt-repository ppa:gnuradio/gnuradio-releases
 sudo apt update
 
-# Install GNU Radio with UHD
+# Install GNU Radio with UHD support
 sudo apt install -y gnuradio gnuradio-dev uhd-host uhd-dev
 
 # Install additional GNU Radio modules
-sudo apt install -y gr-osmosdr gr-fosphor
+sudo apt install -y gr-osmosdr gr-fosphor gr-uhd
 
 # Verify installation
 gnuradio-companion --version
 uhd_usrp_probe
 ```
 
-### Step 3: Install NS3 (Optional)
+#### macOS
+```bash
+# Install GNU Radio via Homebrew
+brew install gnuradio uhd
 
+# Verify installation
+gnuradio-companion --version
+uhd_usrp_probe
+```
+
+#### Windows (WSL2)
+```bash
+# Follow Ubuntu installation steps within WSL2
+# Note: USRP hardware access may require additional configuration
+```
+
+### Step 3: Install NS3 (Optional but Recommended)
+
+#### Ubuntu/Debian
 ```bash
 # Install NS3 dependencies
 sudo apt install -y build-essential libsqlite3-dev libboost-all-dev libssl-dev
+sudo apt install -y libxml2-dev libgtk-3-dev libgsl-dev
 
 # Download and install NS3
 cd /tmp
@@ -95,25 +129,55 @@ wget https://www.nsnam.org/releases/ns-allinone-3.37.tar.bz2
 tar xjf ns-allinone-3.37.tar.bz2
 cd ns-allinone-3.37
 
-# Build NS3
-./build.py --enable-examples --enable-tests
+# Build NS3 with all modules
+./build.py --enable-examples --enable-tests --enable-modules=core,network,internet,wifi,spectrum
 
-# Add NS3 to PATH
+# Add NS3 to PATH permanently
 echo 'export PATH=$PATH:/tmp/ns-allinone-3.37/ns-3.37' >> ~/.bashrc
+echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/tmp/ns-allinone-3.37/ns-3.37' >> ~/.bashrc
 source ~/.bashrc
 
 # Verify NS3 installation
 ns3 --version
 ```
 
+#### macOS
+```bash
+# Install NS3 via Homebrew
+brew install ns3
+
+# Verify installation
+ns3 --version
+```
+
 ### Step 4: Install Python Dependencies
 
+#### Create Virtual Environment (Recommended)
 ```bash
-# Install Python packages
-pip3 install -r requirements.txt
+# Create virtual environment
+python3 -m venv rf_learning_env
 
-# Install additional packages for development
-pip3 install jupyter notebook ipython
+# Activate virtual environment
+# On Ubuntu/macOS:
+source rf_learning_env/bin/activate
+# On Windows:
+rf_learning_env\Scripts\activate
+
+# Upgrade pip
+pip install --upgrade pip
+```
+
+#### Install Required Packages
+```bash
+# Install core dependencies
+pip install -r requirements.txt
+
+# Install additional development packages
+pip install jupyter notebook ipython pytest
+
+# Install optional packages for enhanced functionality
+pip install scikit-learn tensorflow torch  # For advanced ML features
+pip install plotly dash  # For interactive visualizations
 ```
 
 ### Step 5: Clone and Setup RF Learning System
@@ -124,15 +188,14 @@ git clone <repository-url>
 cd TABULAR-DSA
 
 # Run setup script
-python3 setup.py
+python setup.py
 
-# Test the installation
-python3 test_system.py
+# Verify installation
+python test_system.py
+python test_ns3_integration.py
 ```
 
-## Usage
-
-### Step 1: Hardware Setup
+### Step 6: Hardware Setup (For Real USRP Operation)
 
 #### Connect USRP1 SDR
 1. **Physical Connection:**
@@ -147,19 +210,9 @@ python3 test_system.py
    # Check if USRP1 is detected
    uhd_usrp_probe
    
-   # Expected output should show:
-   # [INFO] [UHD] linux; GNU C++ version 9.4.0; Boost_107100; UHD_4.1.0.5-0ubuntu1~20.04
-   # [INFO] [B200] Loading firmware image: /usr/share/uhd/images/usrp_b200_fw.hex...
-   # [INFO] [B200] Detecting internal GPSDO....
-   # [INFO] [B200] No GPSDO found
-   # [INFO] [B200] Initialize CODEC control...
-   # [INFO] [B200] Initialize Radio control...
-   # [INFO] [B200] Performing register loopback test...
-   # [INFO] [B200] Register loopback test passed
-   # [INFO] [B200] Initialize Baseband PLLs...
-   # [INFO] [B200] Initialize RF PLLs...
-   # [INFO] [B200] RF PLLs locked
-   # [INFO] [B200] Radio 0 tune: requested: 2.44 GHz, actual: 2.44 GHz
+   # Expected output should show device information
+   # If not detected, try:
+   sudo uhd_usrp_probe
    ```
 
 3. **Test USRP1 Communication:**
@@ -171,7 +224,18 @@ python3 test_system.py
    uhd_usrp_probe --args="type=b200"
    ```
 
-### Step 2: Environment Setup
+4. **Configure Network (if using network connection):**
+   ```bash
+   # Set static IP for USRP1
+   sudo ifconfig eth0 192.168.10.1 netmask 255.255.255.0
+   
+   # Test connectivity
+   ping 192.168.10.2
+   ```
+
+## Configuration
+
+### Step 1: Environment Configuration
 
 #### Configure RF Environment
 1. **Set Power Threshold** (adjust based on your environment):
@@ -195,20 +259,52 @@ python3 test_system.py
    # CENTER_FREQUENCY = 2.44e9  # 2.44 GHz
    ```
 
-### Step 3: Run the System
+3. **Optimize Learning Parameters:**
+   ```bash
+   # Edit config.py to adjust learning parameters
+   nano config.py
+   
+   # Key parameters to adjust:
+   # LEARNING_RATE = 0.1      # 0.01 to 0.3
+   # EPSILON_DECAY = 0.995    # 0.99 to 0.999
+   # MIN_EPSILON = 0.01       # 0.001 to 0.1
+   ```
 
-#### Option A: Real USRP Operation (Recommended for Production)
+## Usage
+
+### Step 1: Basic Testing
+
+#### Verify Installation
+```bash
+# Run comprehensive tests
+python test_system.py
+python test_ns3_integration.py
+
+# Expected output: All tests passed
+```
+
+#### Test Simulation Mode
+```bash
+# Run basic simulation
+python main_system.py --simulate --episodes 50
+
+# Expected output: Learning progress and final statistics
+```
+
+### Step 2: Advanced Operation
+
+#### Option A: Real USRP Operation (Production)
 ```bash
 # Terminal 1: Start GNU Radio flowgraph
 gnuradio-companion rf_sensing.grc
 
 # In GNU Radio Companion:
-# 1. Click the "Run" button (▶️)
+# 1. Click the "Run" button (play icon)
 # 2. Verify spectrum display shows activity
 # 3. Keep this running
 
 # Terminal 2: Run the learning system
-python3 main_system.py
+python main_system.py
 
 # The system will:
 # - Connect to USRP1
@@ -220,19 +316,25 @@ python3 main_system.py
 #### Option B: Simulation Mode (Testing/Development)
 ```bash
 # Run with basic simulation
-python3 main_system.py --simulate --episodes 1000
+python main_system.py --simulate --episodes 1000
 
 # Run with NS3 simulation (realistic network conditions)
-python3 main_system.py --ns3 --episodes 1000
+python main_system.py --ns3 --episodes 1000
+
+# Run with custom parameters
+python main_system.py --simulate --episodes 500 --learning-rate 0.15
 ```
 
 #### Option C: Load Pre-trained Q-table
 ```bash
 # If you have a saved Q-table from previous runs
-python3 main_system.py --load-qtable --episodes 1000
+python main_system.py --load-qtable --episodes 1000
+
+# Continue learning from previous state
+python main_system.py --load-qtable --simulate --episodes 200
 ```
 
-### Step 4: Monitor and Control
+### Step 3: Monitoring and Control
 
 #### Real-time Monitoring
 - **Performance Dashboard**: 6-panel real-time plots
@@ -312,14 +414,23 @@ TABULAR DSA/
 
 ## Success Criteria
 
-- ✅ **Q-agent starts with random behavior** (epsilon = 1.0)
-- ✅ **After 100–200 episodes, shows lower collision rate** (demonstrated in tests)
-- ✅ **Outperforms RandomAgent in cumulative reward** (12.8% improvement shown)
-- ✅ **Real USRP spectrum data used as learning input** (flowgraph ready)
-- ✅ **Real-time visualization of learning progress** (6-panel dashboard)
-- ✅ **NS3 integration for realistic simulation** (fallback mode available)
+- **Q-agent starts with random behavior** (epsilon = 1.0)
+- **After 100–200 episodes, shows lower collision rate** (demonstrated in tests)
+- **Outperforms RandomAgent in cumulative reward** (12.8% improvement shown)
+- **Real USRP spectrum data used as learning input** (flowgraph ready)
+- **Real-time visualization of learning progress** (6-panel dashboard)
+- **NS3 integration for realistic simulation** (fallback mode available)
+
+## Documentation
+
+- **[INSTALLATION_GUIDE.md](INSTALLATION_GUIDE.md)** - Complete installation instructions for all platforms
+- **[QUICK_SETUP.md](QUICK_SETUP.md)** - Quick start guide for experienced users
+- **[SYSTEM_SUMMARY.md](SYSTEM_SUMMARY.md)** - Technical implementation details
+- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Comprehensive troubleshooting guide
 
 ## Troubleshooting
+
+For detailed troubleshooting information, see [TROUBLESHOOTING.md](TROUBLESHOOTING.md).
 
 ### Common Issues and Solutions
 
@@ -333,6 +444,10 @@ uhd_usrp_probe
 
 # If not detected, try:
 sudo uhd_usrp_probe
+
+# Add user to usb group
+sudo usermod -a -G usb $USER
+sudo reboot
 ```
 
 #### GNU Radio Not Starting
@@ -343,6 +458,9 @@ gnuradio-companion --version
 # Reinstall if needed
 sudo apt remove gnuradio
 sudo apt install gnuradio
+
+# Check Qt dependencies
+sudo apt install qt5-default python3-pyqt5
 ```
 
 #### Permission Issues
@@ -371,6 +489,9 @@ pip3 install --upgrade pip
 
 # Install packages individually
 pip3 install numpy matplotlib pandas scipy seaborn
+
+# Check for conflicts
+pip3 check
 ```
 
 ### Performance Tuning
