@@ -53,3 +53,17 @@
 2025-07-27 23:17:57,385 - visualization - INFO - Channel heatmap saved to channel_heatmap.png
 2025-07-27 23:17:58,090 - __main__ - INFO - RF Learning System stopped
 2025-07-28 00:18:03,236 - main_system - INFO - RF Learning System initialized
+2025-07-29 15:09:38,314 - ns3_integration - INFO - Created NS3 script: rf_learning_simulation.cc
+2025-07-29 15:09:38,316 - ns3_integration - WARNING - NS3 compilation failed: [WinError 2] The system cannot find the file specified
+2025-07-29 15:09:38,316 - ns3_integration - INFO - Using fallback simulation mode
+2025-07-29 15:09:38,316 - ns3_integration - INFO - Running fallback simulation
+2025-07-29 15:09:38,319 - ns3_integration - INFO - Fallback simulation completed. Data saved to ns3_spectrum_data.json
+2025-07-29 15:09:38,319 - __main__ - INFO - NS3 spectrum provider initialized
+2025-07-29 15:09:38,319 - __main__ - INFO - RF Learning System initialized
+2025-07-29 15:09:38,319 - __main__ - INFO - Starting RF Learning System (Simulate: False)
+2025-07-29 15:09:45,812 - __main__ - INFO - Reached maximum episodes: 50
+2025-07-29 15:09:45,813 - q_learning_agent - INFO - Q-table saved to q_table.pkl
+2025-07-29 15:09:45,813 - __main__ - INFO - Creating final visualizations...
+2025-07-29 15:09:46,792 - visualization - INFO - Final results saved to final_results.png
+2025-07-29 15:09:47,327 - visualization - INFO - Channel heatmap saved to channel_heatmap.png
+2025-07-29 15:09:48,108 - __main__ - INFO - RF Learning System stopped
