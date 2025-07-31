@@ -67,3 +67,23 @@
 2025-07-29 15:09:46,792 - visualization - INFO - Final results saved to final_results.png
 2025-07-29 15:09:47,327 - visualization - INFO - Channel heatmap saved to channel_heatmap.png
 2025-07-29 15:09:48,108 - __main__ - INFO - RF Learning System stopped
+2025-08-01 01:27:29,813 - __main__ - INFO - Using simulated spectrum data
+2025-08-01 01:27:29,813 - __main__ - INFO - Simplified RF Learning System initialized
+2025-08-01 01:27:29,813 - __main__ - INFO - Starting Simplified RF Learning System (NS3: False)
+2025-08-01 01:27:37,089 - __main__ - INFO - Reached maximum episodes: 50
+2025-08-01 01:27:37,090 - q_learning_agent - INFO - Q-table saved to q_table.pkl
+2025-08-01 01:27:37,091 - __main__ - INFO - Creating final visualizations...
+2025-08-01 01:27:37,990 - visualization - INFO - Final results saved to final_results.png
+2025-08-01 01:27:38,475 - visualization - INFO - Channel heatmap saved to channel_heatmap.png
+2025-08-01 01:27:39,124 - __main__ - INFO - Simplified RF Learning System stopped
+2025-08-01 01:30:18,614 - __main__ - INFO - Using simulated spectrum data
+2025-08-01 01:30:18,614 - __main__ - INFO - Simplified RF Learning System initialized
+2025-08-01 01:30:18,615 - __main__ - INFO - Starting Simplified RF Learning System (NS3: False)
+2025-08-01 01:30:32,404 - q_learning_agent - INFO - Episode 100: Total Reward=90.00, Collision Rate=0.000, Epsilon=0.606
+2025-08-01 01:30:32,405 - random_agent - INFO - Random Agent Episode 100: Total Reward=75.00, Collision Rate=0.000
+2025-08-01 01:30:32,868 - __main__ - INFO - Reached maximum episodes: 100
+2025-08-01 01:30:32,869 - q_learning_agent - INFO - Q-table saved to q_table.pkl
+2025-08-01 01:30:32,870 - __main__ - INFO - Creating final visualizations...
+2025-08-01 01:30:33,747 - visualization - INFO - Final results saved to final_results.png
+2025-08-01 01:30:34,219 - visualization - INFO - Channel heatmap saved to channel_heatmap.png
+2025-08-01 01:30:34,839 - __main__ - INFO - Simplified RF Learning System stopped

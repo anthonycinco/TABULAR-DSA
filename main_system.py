@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Main RF Learning System
-Orchestrates spectrum sensing, Q-learning, and visualization
+Simplified RF Learning System - Simulation and NS3 Only
+Orchestrates spectrum sensing simulation, Q-learning, and visualization
 """
 
 import argparse
@@ -22,21 +22,19 @@ from ns3_integration import NS3SpectrumProvider
 
 class RFLearningSystem:
     """
-    Main RF Learning System that coordinates all components
+    Simplified RF Learning System that coordinates simulation and NS3 components
     """
     
-    def __init__(self, simulate=False, load_q_table=False, use_ns3=False):
+    def __init__(self, use_ns3=False, load_q_table=False):
         """
         Initialize the RF learning system
         
         Args:
-            simulate: Whether to use simulated data instead of real USRP
-            load_q_table: Whether to load existing Q-table
             use_ns3: Whether to use NS3 simulation
+            load_q_table: Whether to load existing Q-table
         """
-        self.simulate = simulate
-        self.load_q_table = load_q_table
         self.use_ns3 = use_ns3
+        self.load_q_table = load_q_table
         self.running = False
         
         # Setup logging
@@ -60,6 +58,7 @@ class RFLearningSystem:
             self.logger.info("NS3 spectrum provider initialized")
         else:
             self.spectrum_provider = None
+            self.logger.info("Using simulated spectrum data")
         
         # Initialize spectrum data
         self.spectrum_data = None
@@ -69,7 +68,7 @@ class RFLearningSystem:
         self.episode_count = 0
         self.start_time = None
         
-        self.logger.info("RF Learning System initialized")
+        self.logger.info("Simplified RF Learning System initialized")
     
     def _setup_logging(self):
         """Setup logging configuration"""
@@ -84,7 +83,7 @@ class RFLearningSystem:
     
     def _simulate_spectrum_data(self):
         """
-        Simulate spectrum data for testing without USRP
+        Simulate spectrum data for testing
         
         Returns:
             List of 5 power levels in dB
@@ -108,39 +107,6 @@ class RFLearningSystem:
         
         return power_levels
     
-    def _read_usrp_data(self):
-        """
-        Read spectrum data from USRP (placeholder for real implementation)
-        
-        Returns:
-            List of 5 power levels in dB
-        """
-        # This is a placeholder - in real implementation, this would:
-        # 1. Read from GNU Radio flowgraph output
-        # 2. Process FFT data
-        # 3. Extract power levels for 5 channels
-        
-        try:
-            # For now, simulate data
-            # In real implementation, read from file or socket
-            if os.path.exists("spectrum_data.bin"):
-                # Read binary data from GNU Radio
-                with open("spectrum_data.bin", "rb") as f:
-                    # This is a simplified version - real implementation would
-                    # parse the actual GNU Radio data format
-                    data = f.read()
-                
-                # Process data to extract power levels
-                # For now, return simulated data
-                return self._simulate_spectrum_data()
-            else:
-                # No data file, use simulation
-                return self._simulate_spectrum_data()
-                
-        except Exception as e:
-            self.logger.warning(f"Error reading USRP data: {e}")
-            return self._simulate_spectrum_data()
-    
     def _get_spectrum_data(self):
         """
         Get current spectrum data
@@ -150,10 +116,8 @@ class RFLearningSystem:
         """
         if self.use_ns3 and self.spectrum_provider:
             return self.spectrum_provider.get_power_levels()
-        elif self.simulate:
-            return self._simulate_spectrum_data()
         else:
-            return self._read_usrp_data()
+            return self._simulate_spectrum_data()
     
     def _simulate_transmission_result(self, action, power_levels):
         """
@@ -233,6 +197,7 @@ class RFLearningSystem:
         print(f"\n{'='*60}")
         print(f"Episode: {self.episode_count}")
         print(f"Runtime: {time.time() - self.start_time:.1f}s")
+        print(f"Mode: {'NS3 Simulation' if self.use_ns3 else 'Simulated Data'}")
         print(f"{'='*60}")
         print(f"{'Metric':<20} {'Q-Agent':<15} {'Random Agent':<15}")
         print(f"{'-'*60}")
@@ -255,9 +220,9 @@ class RFLearningSystem:
         self.running = True
         self.start_time = time.time()
         
-        self.logger.info(f"Starting RF Learning System (Simulate: {self.simulate})")
-        print(f"Starting RF Learning System...")
-        print(f"Simulation mode: {self.simulate}")
+        self.logger.info(f"Starting Simplified RF Learning System (NS3: {self.use_ns3})")
+        print(f"Starting Simplified RF Learning System...")
+        print(f"NS3 Simulation: {self.use_ns3}")
         print(f"Max episodes: {max_episodes}")
         print(f"Max time: {max_time}s")
         print(f"Press Ctrl+C to stop early")
@@ -313,8 +278,8 @@ class RFLearningSystem:
         # Close visualizer
         self.visualizer.close()
         
-        self.logger.info("RF Learning System stopped")
-        print("RF Learning System stopped")
+        self.logger.info("Simplified RF Learning System stopped")
+        print("Simplified RF Learning System stopped")
         print("Final results saved to:")
         print("- final_results.png")
         print("- channel_heatmap.png")
@@ -327,9 +292,7 @@ def signal_handler(signum, frame):
 
 def main():
     """Main entry point"""
-    parser = argparse.ArgumentParser(description='RF Learning System')
-    parser.add_argument('--simulate', action='store_true', 
-                       help='Use simulated data instead of real USRP')
+    parser = argparse.ArgumentParser(description='Simplified RF Learning System - Simulation and NS3 Only')
     parser.add_argument('--ns3', action='store_true',
                        help='Use NS3 simulation for realistic network conditions')
     parser.add_argument('--load-qtable', action='store_true',
@@ -338,24 +301,14 @@ def main():
                        help=f'Maximum number of episodes (default: {config.SIMULATION_STEPS})')
     parser.add_argument('--time', type=int, default=config.SIMULATION_DURATION,
                        help=f'Maximum runtime in seconds (default: {config.SIMULATION_DURATION})')
-    parser.add_argument('--create-flowgraph', action='store_true',
-                       help='Create GNU Radio flowgraph file')
     
     args = parser.parse_args()
     
     # Handle signal interrupts
     signal.signal(signal.SIGINT, signal_handler)
     
-    # Create flowgraph if requested
-    if args.create_flowgraph:
-        from create_flowgraph import create_flowgraph
-        create_flowgraph()
-        return
-    
     # Create and run system
-    system = RFLearningSystem(simulate=args.simulate, 
-                             load_q_table=args.load_qtable,
-                             use_ns3=args.ns3)
+    system = RFLearningSystem(use_ns3=args.ns3, load_q_table=args.load_qtable)
     
     try:
         system.run(max_episodes=args.episodes, max_time=args.time)

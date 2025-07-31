@@ -1,531 +1,413 @@
-# RF Learning System - Troubleshooting Guide
+# Troubleshooting Guide - Simplified RF Learning System
 
-This guide provides solutions to common issues encountered when installing and running the RF Learning System.
+This guide provides solutions for common issues encountered with the simplified RF learning system.
 
-## Table of Contents
+## Quick Diagnosis
 
-1. [Installation Issues](#installation-issues)
-2. [Runtime Issues](#runtime-issues)
-3. [Hardware Issues](#hardware-issues)
-4. [Performance Issues](#performance-issues)
-5. [Platform-Specific Issues](#platform-specific-issues)
-6. [Getting Help](#getting-help)
-
-## Installation Issues
-
-### Python Version Problems
-
-#### Issue: Python version too old
-```
-ERROR: Python 3.7+ is required. Current version: 3.6.x
-```
-
-**Solution:**
+### 1. Run System Tests
 ```bash
-# Ubuntu/Debian
-sudo apt update
-sudo apt install python3.9 python3.9-pip python3.9-venv
-
-# macOS
-brew install python@3.9
-
-# Windows
-# Download from https://www.python.org/downloads/
+python test_system.py
 ```
 
-#### Issue: Python not found in PATH
-```
-'python' is not recognized as an internal or external command
-```
-
-**Solution:**
+### 2. Check System Log
 ```bash
-# Check Python installation
-python3 --version
-python --version
-
-# Add Python to PATH (Windows)
-# Reinstall Python with "Add to PATH" option checked
-
-# Ubuntu/Debian
-sudo apt install python3-is-python3
+tail -f system_log.txt
 ```
 
-### Package Installation Issues
-
-#### Issue: pip installation fails
-```
-ERROR: Could not find a version that satisfies the requirement
-```
-
-**Solution:**
+### 3. Verify Dependencies
 ```bash
-# Upgrade pip
-python -m pip install --upgrade pip
-
-# Install packages individually
-pip install numpy
-pip install matplotlib
-pip install pandas
-pip install scipy
-pip install seaborn
-
-# Check for conflicts
-pip check
+pip list | grep -E "(numpy|matplotlib|seaborn)"
 ```
 
-#### Issue: Permission denied during installation
-```
-PermissionError: [Errno 13] Permission denied
-```
+## Common Issues and Solutions
 
-**Solution:**
-```bash
-# Use user installation
-pip install --user -r requirements.txt
+### Python Environment Issues
 
-# Or use virtual environment
-python -m venv rf_learning_env
-source rf_learning_env/bin/activate  # Linux/macOS
-rf_learning_env\Scripts\activate     # Windows
-pip install -r requirements.txt
-```
-
-### GNU Radio Issues
-
-#### Issue: GNU Radio not found
-```
-gnuradio-companion: command not found
-```
-
-**Solution:**
-```bash
-# Ubuntu/Debian
-sudo add-apt-repository ppa:gnuradio/gnuradio-releases
-sudo apt update
-sudo apt install gnuradio gnuradio-dev
-
-# macOS
-brew install gnuradio
-
-# Verify installation
-gnuradio-companion --version
-```
-
-#### Issue: GNU Radio fails to start
-```
-ImportError: No module named 'gnuradio'
-```
-
-**Solution:**
-```bash
-# Reinstall GNU Radio
-sudo apt remove gnuradio
-sudo apt install gnuradio
-
-# Check Qt dependencies
-sudo apt install qt5-default python3-pyqt5
-```
-
-### NS3 Issues
-
-#### Issue: NS3 not found
-```
-ns3: command not found
-```
-
-**Solution:**
-```bash
-# Ubuntu/Debian
-sudo apt install ns3-dev
-
-# macOS
-brew install ns3
-
-# Manual installation
-cd /tmp
-wget https://www.nsnam.org/releases/ns-allinone-3.37.tar.bz2
-tar xjf ns-allinone-3.37.tar.bz2
-cd ns-allinone-3.37
-./build.py --enable-examples --enable-tests
-```
-
-#### Issue: NS3 compilation fails
-```
-make: *** [all] Error 2
-```
-
-**Solution:**
-```bash
-# Install dependencies
-sudo apt install build-essential libsqlite3-dev libboost-all-dev libssl-dev
-sudo apt install libxml2-dev libgtk-3-dev libgsl-dev
-
-# Clean and rebuild
-cd /tmp/ns-allinone-3.37
-./build.py --clean
-./build.py --enable-examples --enable-tests
-```
-
-## Runtime Issues
-
-### Import Errors
-
-#### Issue: Module not found
+#### Issue: Import Errors
+**Symptoms:**
 ```
 ModuleNotFoundError: No module named 'numpy'
 ```
 
-**Solution:**
+**Solutions:**
 ```bash
-# Install missing module
-pip install numpy
-
-# Check all requirements
+# Install dependencies
 pip install -r requirements.txt
 
-# Verify installation
-python -c "import numpy; print(numpy.__version__)"
+# Or install individually
+pip install numpy matplotlib seaborn pickle5
 ```
 
-#### Issue: Version conflicts
+#### Issue: Python Version Too Old
+**Symptoms:**
 ```
-ImportError: numpy.core.multiarray failed to import
+SyntaxError: f-string expressions
 ```
 
-**Solution:**
+**Solutions:**
 ```bash
-# Reinstall numpy
-pip uninstall numpy
-pip install numpy
-
-# Or upgrade all packages
-pip install --upgrade numpy matplotlib pandas scipy seaborn
-```
-
-### Test Failures
-
-#### Issue: System tests fail
-```
-Test failed: [specific error message]
-```
-
-**Solution:**
-```bash
-# Run individual tests
-python test_system.py
-python test_ns3_integration.py
-
 # Check Python version
 python --version
 
-# Verify all dependencies
-pip list | grep -E "(numpy|matplotlib|pandas|scipy|seaborn)"
+# Install Python 3.7+ if needed
+# Ubuntu/Debian:
+sudo apt install python3.8 python3.8-pip
+
+# macOS:
+brew install python@3.8
 ```
 
-#### Issue: NS3 integration tests fail
-```
-NS3 compilation failed: [error message]
-```
+### Simulation Issues
 
-**Solution:**
-```bash
-# NS3 is optional - system works without it
-# Check if NS3 is properly installed
-ns3 --version
-
-# If NS3 is not needed, the system will use fallback simulation
+#### Issue: Simulation Not Starting
+**Symptoms:**
+```
+Error: Cannot start simulation
 ```
 
-### Memory Issues
+**Solutions:**
+1. Check configuration parameters in `config.py`
+2. Verify all required parameters are set
+3. Run with verbose logging:
+   ```bash
+   python main_system.py --episodes 10
+   ```
 
-#### Issue: Out of memory
+#### Issue: Poor Learning Performance
+**Symptoms:**
+- Q-agent not improving over time
+- High collision rates
+- Low success rates
+
+**Solutions:**
+1. **Adjust Learning Parameters** in `config.py`:
+   ```python
+   LEARNING_RATE = 0.15      # Increase from 0.1
+   EPSILON_DECAY = 0.99      # Slower decay
+   MIN_EPSILON = 0.05        # Higher minimum
+   ```
+
+2. **Adjust Reward Structure**:
+   ```python
+   SUCCESS_REWARD = 2.0      # Increase success reward
+   COLLISION_PENALTY = -2.0  # Increase collision penalty
+   ```
+
+3. **Run Longer Simulations**:
+   ```bash
+   python main_system.py --episodes 2000
+   ```
+
+#### Issue: Visualization Not Working
+**Symptoms:**
+- No plots appearing
+- Matplotlib errors
+
+**Solutions:**
+1. **Set Matplotlib Backend**:
+   ```python
+   import matplotlib
+   matplotlib.use('TkAgg')  # or 'Qt5Agg'
+   ```
+
+2. **Install GUI Dependencies**:
+   ```bash
+   # Ubuntu/Debian:
+   sudo apt install python3-tk
+
+   # macOS:
+   brew install python-tk
+   ```
+
+3. **Use Non-Interactive Mode**:
+   ```python
+   # In config.py, set:
+   PLOT_UPDATE_INTERVAL = 0  # Disable real-time plots
+   ```
+
+### NS3 Integration Issues
+
+#### Issue: NS3 Not Found
+**Symptoms:**
 ```
-MemoryError: Unable to allocate array
-```
-
-**Solution:**
-```bash
-# Reduce simulation size
-python main_system.py --simulate --episodes 50  # Instead of 1000
-
-# Close other applications
-# Increase system RAM if possible
-```
-
-## Hardware Issues
-
-### USRP Detection Problems
-
-#### Issue: USRP not detected
-```
-No USRP devices found
-```
-
-**Solution:**
-```bash
-# Check USB connection
-lsusb | grep Ettus
-
-# Check UHD installation
-uhd_usrp_probe
-
-# Try with sudo
-sudo uhd_usrp_probe
-
-# Add user to usb group
-sudo usermod -a -G usb $USER
-sudo reboot
-```
-
-#### Issue: USRP permission denied
-```
-RuntimeError: USRP: No devices found
-```
-
-**Solution:**
-```bash
-# Check USB permissions
-ls -la /dev/bus/usb/
-
-# Add udev rules
-echo 'SUBSYSTEM=="usb", ATTRS{idVendor}=="2500", MODE="0666"' | sudo tee /etc/udev/rules.d/99-usrp.rules
-
-# Reload udev rules
-sudo udevadm control --reload-rules
-sudo udevadm trigger
-```
-
-#### Issue: USRP network connection fails
-```
-RuntimeError: USRP: No devices found
-```
-
-**Solution:**
-```bash
-# Check network configuration
-ifconfig eth0 192.168.10.1 netmask 255.255.255.0
-
-# Test connectivity
-ping 192.168.10.2
-
-# Check USRP IP address
-uhd_usrp_probe --args="addr=192.168.10.2"
+NS3 integration test failed: [Errno 2] No such file or directory: 'ns3'
 ```
 
-### Antenna Issues
+**Solutions:**
+1. **Install NS3** (optional):
+   ```bash
+   # Ubuntu/Debian:
+   sudo apt update
+   sudo apt install build-essential libsqlite3-dev libboost-all-dev libssl-dev
+   git clone https://gitlab.com/nsnam/ns-3-dev.git
+   cd ns-3-dev
+   ./ns3 configure --enable-examples --enable-tests
+   ./ns3 build
+   
+   # Add to PATH:
+   echo 'export PATH=$PATH:~/ns-3-dev' >> ~/.bashrc
+   source ~/.bashrc
+   ```
 
-#### Issue: No signal detected
+2. **Use Simulation Mode** (fallback):
+   ```bash
+   python main_system.py  # Will use simulated data
+   ```
+
+#### Issue: NS3 Compilation Errors
+**Symptoms:**
 ```
-Power levels consistently low
+g++: error: unrecognized command line option
 ```
 
-**Solution:**
-```bash
-# Check antenna connection
-# Ensure antenna is suitable for 2.4 GHz
-# Adjust USRP gain in config.py
-USRP_GAIN = 30  # Increase gain
+**Solutions:**
+1. **Update Build Tools**:
+   ```bash
+   sudo apt update
+   sudo apt install build-essential cmake
+   ```
+
+2. **Check NS3 Requirements**:
+   ```bash
+   # Install additional dependencies
+   sudo apt install libxml2-dev libgtk-3-dev libgsl-dev
+   ```
+
+3. **Use Pre-built NS3**:
+   ```bash
+   # macOS:
+   brew install ns3
+   ```
+
+#### Issue: NS3 Simulation Crashes
+**Symptoms:**
+```
+NS3 simulation terminated unexpectedly
 ```
 
-## Performance Issues
+**Solutions:**
+1. **Check NS3 Script**:
+   ```bash
+   # Verify NS3 script exists
+   ls -la rf_learning_simulation.cc
+   ```
 
-### Slow Learning
+2. **Run NS3 Manually**:
+   ```bash
+   ns3 run rf_learning_simulation.cc
+   ```
 
-#### Issue: Q-agent not learning
+3. **Use Fallback Mode**:
+   ```bash
+   python main_system.py  # Will use simulated data
+   ```
+
+### Performance Issues
+
+#### Issue: Slow Simulation
+**Symptoms:**
+- Long episode times
+- High CPU usage
+
+**Solutions:**
+1. **Reduce Visualization Updates**:
+   ```python
+   # In config.py:
+   PLOT_UPDATE_INTERVAL = 5.0  # Update every 5 seconds
+   ```
+
+2. **Reduce Episode Frequency**:
+   ```python
+   # In config.py:
+   SENSING_INTERVAL = 0.2  # Increase from 0.1
+   ```
+
+3. **Disable Real-time Plots**:
+   ```python
+   # In main_system.py, comment out:
+   # self._update_visualization()
+   ```
+
+#### Issue: Memory Usage High
+**Symptoms:**
+- System becomes slow
+- Out of memory errors
+
+**Solutions:**
+1. **Limit Episode Count**:
+   ```bash
+   python main_system.py --episodes 500
+   ```
+
+2. **Clear Old Data**:
+   ```bash
+   rm -f q_table.pkl final_results.png channel_heatmap.png
+   ```
+
+3. **Reduce Q-table Size**:
+   ```python
+   # In config.py, reduce state space:
+   NUM_CHANNELS = 3  # Reduce from 5
+   ```
+
+### Configuration Issues
+
+#### Issue: Invalid Configuration
+**Symptoms:**
 ```
-Q-agent performance same as random agent
+Configuration test failed - missing parameter
 ```
 
-**Solution:**
+**Solutions:**
+1. **Check config.py**:
+   ```bash
+   python -c "import config; print(dir(config))"
+   ```
+
+2. **Restore Default Configuration**:
+   ```bash
+   # Recreate config.py with default values
+   ```
+
+3. **Validate Parameters**:
+   ```python
+   # In config.py, ensure all required parameters exist:
+   NUM_CHANNELS = 5
+   SENSING_INTERVAL = 0.1
+   POWER_THRESHOLD = -60
+   LEARNING_RATE = 0.1
+   DISCOUNT_FACTOR = 0.9
+   # ... etc
+   ```
+
+## Debugging Techniques
+
+### 1. Enable Verbose Logging
 ```python
-# Adjust learning parameters in config.py
-LEARNING_RATE = 0.2      # Increase from 0.1
-EPSILON_DECAY = 0.99     # Decrease from 0.995
-MIN_EPSILON = 0.05       # Increase from 0.01
+# In config.py:
+LOG_LEVEL = "DEBUG"
 ```
 
-#### Issue: High collision rate
-```
-Collision rate not decreasing
-```
-
-**Solution:**
-```python
-# Adjust power threshold in config.py
-POWER_THRESHOLD = -50    # Increase threshold for noisy environments
-POWER_THRESHOLD = -70    # Decrease threshold for quiet environments
-```
-
-### Visualization Issues
-
-#### Issue: Plots not updating
-```
-Matplotlib plots frozen
-```
-
-**Solution:**
+### 2. Run with Debug Output
 ```bash
-# Use non-interactive backend
-export MPLBACKEND=Agg
-
-# Or set in Python
-import matplotlib
-matplotlib.use('Agg')
+python -u main_system.py --episodes 10 2>&1 | tee debug.log
 ```
 
-#### Issue: Plot window not appearing
-```
-No plot window shown
-```
-
-**Solution:**
+### 3. Test Individual Components
 ```bash
-# Install display dependencies
-sudo apt install python3-tk
+# Test agents only
+python -c "
+from q_learning_agent import TabularQAgent
+from random_agent import RandomAgent
+agent = TabularQAgent()
+print('Q-Agent test passed')
+"
 
-# Or use headless mode
-python main_system.py --simulate --episodes 50 --no-display
+# Test visualization only
+python -c "
+from visualization import RFLearningVisualizer
+viz = RFLearningVisualizer()
+print('Visualization test passed')
+"
 ```
 
-## Platform-Specific Issues
-
-### Windows Issues
-
-#### Issue: WSL2 not working
-```
-WSL2 installation failed
-```
-
-**Solution:**
-```powershell
-# Enable WSL feature
-dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
-
-# Enable Virtual Machine feature
-dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
-
-# Restart computer
-# Install WSL2
-wsl --install -d Ubuntu
-```
-
-#### Issue: Python path problems
-```
-'python' is not recognized
-```
-
-**Solution:**
-```cmd
-# Check Python installation
-python --version
-py --version
-
-# Reinstall Python with "Add to PATH" option
-# Or add manually to PATH environment variable
-```
-
-### macOS Issues
-
-#### Issue: Homebrew not found
-```
-brew: command not found
-```
-
-**Solution:**
+### 4. Check File Permissions
 ```bash
-# Install Homebrew
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-# Add to PATH
-echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
-eval "$(/opt/homebrew/bin/brew shellenv)"
-```
-
-#### Issue: Permission denied
-```
-Permission denied: /usr/local/bin
-```
-
-**Solution:**
-```bash
-# Fix permissions
-sudo chown -R $(whoami) /usr/local/bin
-sudo chown -R $(whoami) /usr/local/lib
-
-# Or use Homebrew
-brew install python3
-```
-
-### Linux Issues
-
-#### Issue: Package repository errors
-```
-E: Unable to locate package
-```
-
-**Solution:**
-```bash
-# Update package lists
-sudo apt update
-
-# Add missing repositories
-sudo add-apt-repository ppa:gnuradio/gnuradio-releases
-
-# Update again
-sudo apt update
-```
-
-#### Issue: Qt dependencies missing
-```
-ImportError: No module named 'PyQt5'
-```
-
-**Solution:**
-```bash
-# Install Qt dependencies
-sudo apt install qt5-default python3-pyqt5
-
-# Or use PySide2
-pip install PySide2
+# Ensure write permissions
+chmod 755 *.py
+chmod 644 *.txt *.md
 ```
 
 ## Getting Help
 
-### Before Asking for Help
+### 1. Check System Information
+```bash
+# Python version
+python --version
 
-1. **Check the logs**: Look at `system_log.txt` for detailed error messages
-2. **Run tests**: Execute `python test_system.py` to verify installation
-3. **Check versions**: Verify Python, GNU Radio, and other dependencies
-4. **Search documentation**: Check README.md, INSTALLATION_GUIDE.md, and this file
+# Installed packages
+pip list
 
-### Information to Provide
+# System info
+uname -a
+```
 
-When reporting issues, include:
+### 2. Collect Error Information
+```bash
+# Run with full error output
+python main_system.py 2>&1 | tee error.log
 
-1. **Operating System**: Ubuntu 20.04, Windows 10, macOS 12, etc.
-2. **Python Version**: `python --version`
-3. **Error Message**: Complete error traceback
-4. **Steps to Reproduce**: Exact commands run
-5. **System Information**: RAM, CPU, available disk space
-6. **Hardware**: USRP model (if applicable)
+# Check system log
+tail -50 system_log.txt
+```
 
-### Common Solutions Summary
+### 3. Minimal Test Case
+```bash
+# Create minimal test
+python -c "
+import numpy as np
+import matplotlib.pyplot as plt
+print('Basic dependencies OK')
+"
+```
 
-| Issue | Quick Fix |
-|-------|-----------|
-| Python not found | Install Python 3.7+ and add to PATH |
-| Package installation fails | Upgrade pip and install individually |
-| GNU Radio not working | Install via PPA (Ubuntu) or Homebrew (macOS) |
-| USRP not detected | Check USB connection and permissions |
-| Tests failing | Verify all dependencies are installed |
-| Performance poor | Adjust learning parameters in config.py |
+## Performance Optimization
 
-### Additional Resources
+### 1. Faster Learning
+```python
+# In config.py:
+LEARNING_RATE = 0.2        # Faster learning
+EPSILON_DECAY = 0.99       # Faster exploration decay
+SENSING_INTERVAL = 0.05    # Faster episodes
+```
 
-- **Documentation**: README.md, INSTALLATION_GUIDE.md, SYSTEM_SUMMARY.md
-- **Configuration**: Edit config.py for environment-specific settings
-- **Examples**: Run simulation mode for testing without hardware
-- **Logs**: Check system_log.txt for detailed error information
+### 2. Better Performance
+```python
+# In config.py:
+SUCCESS_REWARD = 2.0       # Higher success reward
+COLLISION_PENALTY = -2.0   # Higher collision penalty
+POWER_THRESHOLD = -65      # More sensitive detection
+```
 
-The system is designed to be robust and provide fallback options when hardware or software is not available. Most issues can be resolved by following the troubleshooting steps above. 
+### 3. Stable Learning
+```python
+# In config.py:
+MIN_EPSILON = 0.05         # Maintain some exploration
+DISCOUNT_FACTOR = 0.95     # Slightly higher discount
+```
+
+## Common Commands
+
+### System Management
+```bash
+# Test system
+python test_system.py
+
+# Run simulation
+python main_system.py
+
+# Run with NS3
+python main_system.py --ns3
+
+# Load existing Q-table
+python main_system.py --load-qtable
+
+# Custom parameters
+python main_system.py --episodes 500 --time 60
+```
+
+### File Management
+```bash
+# Clean output files
+rm -f *.png *.pkl system_log.txt
+
+# Backup Q-table
+cp q_table.pkl q_table_backup.pkl
+
+# Check file sizes
+ls -lh *.pkl *.png *.txt
+```
+
+---
+
+**Note**: This simplified version focuses on simulation and NS3 issues. All hardware-related troubleshooting has been removed. 

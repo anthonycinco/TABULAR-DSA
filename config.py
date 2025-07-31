@@ -1,5 +1,5 @@
 """
-Configuration parameters for the RF Learning System
+Configuration parameters for the Simplified RF Learning System
 """
 
 # RF Sensing Parameters
@@ -29,11 +29,6 @@ LOG_FILE = "system_log.txt"
 PLOT_UPDATE_INTERVAL = 1.0  # seconds
 FIGURE_SIZE = (15, 10)
 DPI = 100
-
-# USRP Parameters
-USRP_DEVICE = "addr=192.168.10.2"  # Default USRP1 address
-USRP_GAIN = 20  # dB
-USRP_ANTENNA = "TX/RX"
 
 # Channel Parameters
 CHANNEL_BANDWIDTH = 20e6  # 20 MHz per channel
