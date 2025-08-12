@@ -240,7 +240,7 @@ python main_system.py --episodes 500 --time 60
 5. **Performance Analysis**: Statistical analysis tools
 
 ### Integration Possibilities
-1. **Real Hardware**: Add back USRP/GNU Radio support
+1. **Real Hardware**: Add back USRP/GNU Radio support (if needed in future)
 2. **Cloud Deployment**: Web-based simulation platform
 3. **Educational Platform**: Interactive learning environment
 4. **Research Tool**: Extensible framework for RF learning research
